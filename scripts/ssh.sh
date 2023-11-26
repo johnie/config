@@ -1,12 +1,7 @@
 #!/bin/bash
 
-if [ $# -lt 2 ]; then
-    echo "Usage: $0 <email>"
-    exit 1
-fi
-
-# Assign the arguments to variables for clarity
-email="$1"
+echo "Input your email address (the one used for your GitHub account): "
+read = email
 
 echo "Generating a new SSH key for GitHub..."
 
