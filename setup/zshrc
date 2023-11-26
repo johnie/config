@@ -1,0 +1,9 @@
+for file in ~/.{extra,exports,aliases,functions,colors}; do
+    [ -r "$file" ] && source "$file"
+done
+unset file
+
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(starship init zsh)"
+eval "$(sheldon source)"

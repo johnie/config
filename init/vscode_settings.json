@@ -1,0 +1,77 @@
+{
+    "typescript.inlayHints.parameterNames.enabled": "all",
+    "typescript.inlayHints.parameterTypes.enabled": true,
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "workbench.tree.indent": 15,
+    "workbench.tree.renderIndentGuides": "always",
+    "workbench.colorCustomizations": {
+        "tree.indentGuidesStroke": "#ff50ff"
+    },
+    "editor.fontFamily": "JetBrains Mono",
+    "editor.fontWeight": "400",
+    "editor.fontSize": 16,
+    "editor.lineHeight": 22,
+    "editor.letterSpacing": -0.3333,
+    "editor.minimap.enabled": false,
+    "files.autoSave": "onFocusChange",
+    "files.insertFinalNewline": true,
+    "editor.formatOnPaste": false,
+    "editor.renderWhitespace": "all",
+    "extensions.ignoreRecommendations": true,
+    "html.format.enable": false,
+    "prettier.singleQuote": true,
+    "prettier.tabWidth": 2,
+    "prettier.proseWrap": "never",
+    "editor.wordWrapColumn": 180,
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "tabnine.experimentalAutoImports": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.accessibilitySupport": "off",
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.guides.indentation": true,
+    "npm.keybindingsChangedWarningShown": true,
+    "svelte.enable-ts-plugin": true,
+    "editor.minimap.maxColumn": 180,
+    "prettier.printWidth": 180,
+    "editor.inlineSuggest.enabled": true,
+    "[svelte]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.formatOnSave": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "update.mode": "manual",
+    "git.openRepositoryInParentFolders": "always",
+    "workbench.iconTheme": "bearded-icons",
+    "workbench.colorTheme": "Bearded Theme feat. Will",
+    "window.nativeTabs": true,
+    "go.toolsManagement.autoUpdate": true,
+    "window.zoomLevel": -1,
+    "workbench.startupEditor": "none"
+}

@@ -1,0 +1,106 @@
+[core]
+        excludesfile = ~/.gitignore
+        autocrlf = input
+        safecrlf = false
+        editor = vim
+        pager = delta
+
+[github]
+        user = johnie
+
+[color]
+        branch = auto
+        diff = auto
+        status = auto
+
+[color "branch"]
+        current = yellow reverse
+        local = yellow
+        remote = green
+
+[color "diff"]
+        meta = yellow bold
+        frag = magenta bold
+        old = red bold
+        new = green bold
+
+[color "status"]
+        added = yellow
+        changed = green
+        untracked = cyan
+
+[alias]
+        git = !exec git
+        lg = log --pretty=oneline --abbrev-commit --decorate
+        l0g = git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+        a = "!git status --short | peco | awk '{print $2}' | xargs git add"
+        d = diff
+        f = fetch
+        r = rebase
+        ri = rebase -i
+        co = checkout
+        ci = commit
+        ca = commit -a
+        ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
+        pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
+        st = status -sb
+        br = branch
+        ba = branch -a
+        u = commit --amend --no-edit
+        ua = !git add --all && git commit --amend --no-edit
+        hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
+        llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
+        # James Brown version control!
+        up = push
+        down = pull
+        # List contributors.
+        lc = shortlog --email --numbered --summary
+        # List remote branches.
+        lrb = "!f() { \
+        remote=\"${1:-origin}\"; \
+        git ls-remote --heads \"$remote\"; \
+        }; f"
+        # Search commits by source code.
+        sc = "!f() { \
+        git log --date=short --decorate --pretty=custom -S\"$1\"; \
+        }; f"
+        # Seach commits by commit message.
+        sm = "!f() { \
+        git log --date=short --decorate --pretty=custom --grep=\"$1\"; \
+        }; f"
+
+[init]
+        defaultBranch = main
+
+[pull]
+        default = simple
+
+[push]
+        default = simple
+        followTags = true
+
+[filter "lfs"]
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f
+        required = true
+
+[interactive]
+    diffFilter = delta --color-only --features=interactive
+
+[delta]
+    features = decorations
+
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax
+
+[grep]
+	lineNumber = true

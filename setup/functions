@@ -1,0 +1,41 @@
+# Create a new directory and enter it
+function mdn {
+  if [ ! -n "$1" ]; then
+    echo "Enter a directory name"
+  elif [ -d $1 ]; then
+    echo "\`$1' already exists"
+  else
+    mkdir $1 && cd $1
+  fi
+}
+
+# Copy w/ progress
+cp_p () {
+  rsync -WavP --human-readable --progress $1 $2
+}
+
+# prune a set of empty directories
+function prunedir () { 
+   find $* -type d -empty -print0 | xargs -0r rmdir -p ; 
+}
+
+# take this repo and copy it to somewhere else minus the .git stuff.
+function gitexport(){
+	mkdir -p "$1"
+	git archive $1 | tar -x -C "$1"
+}
+
+# Open github profile or repo
+function ghd(){
+    open -a google\ chrome 'http://github.com/johnie/'${PWD##*/}
+}
+
+# Open github user or and repo
+function ghu(){
+    open -a google\ chrome 'http://github.com/'$1'/'$2
+}
+
+# Undo a `git push`
+function undopush() {
+  git push -f origin HEAD^:$1
+}
