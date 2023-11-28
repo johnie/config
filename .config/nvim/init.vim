@@ -136,10 +136,7 @@ if exists("&termguicolors") && exists("&winblend")
   set wildoptions=pum
   set pumblend=5
   set background=dark
-  " Use NeoSolarized
-  let g:neosolarized_termtrans=1
-  runtime ./colors/nightfly.vim
-  colorscheme nightfly
+  colorscheme modus " modus_operandi, modus_vivendi
 endif
 
 "}}}

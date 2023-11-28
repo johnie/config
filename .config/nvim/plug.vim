@@ -23,4 +23,5 @@ Plug 'vimwiki/vimwiki'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
+Plug 'miikanissi/modus-themes.nvim'
 call plug#end()
