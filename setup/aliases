@@ -22,7 +22,6 @@ alias ~="cd ~" # `cd` is probably faster to type though
 
 # general shortcuts
 alias cat="bat"
-alias z="cd ~/dev"
 alias zp="cd ~/dev/projects"
 alias zc="cd ~/dev/crip"
 alias zb="cd ~/dev/boss"
