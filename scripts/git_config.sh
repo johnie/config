@@ -6,5 +6,6 @@ read email
 
 git config --global user.email "$email"
 git config --global user.name "$full_name"
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
 
 echo "👌 Awesome, all set."

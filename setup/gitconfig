@@ -1,88 +1,121 @@
 [core]
-        excludesfile = ~/.gitignore
-        autocrlf = input
-        safecrlf = false
-        editor = vim
-        pager = delta
+    excludesfile = ~/.gitignore
+    autocrlf = input
+    safecrlf = false
+    editor = vim
+    pager = delta
+    compression = 9
+    fsync = none
+    whitespace = error
 
-[github]
-        user = johnie
+[commit]
+    template = ~/.gittemplate
 
-[color]
-        branch = auto
-        diff = auto
-        status = auto
+[advice]
+    statusHints = false
+    pushNonFastForward = false
+    addEmptyPathspec = false
 
-[color "branch"]
-        current = yellow reverse
-        local = yellow
-        remote = green
+[blame]
+    coloring = highlightRecent
+    date = relative
 
-[color "diff"]
-        meta = yellow bold
-        frag = magenta bold
-        old = red bold
-        new = green bold
-
-[color "status"]
-        added = yellow
-        changed = green
-        untracked = cyan
-
-[alias]
-        git = !exec git
-        lg = log --pretty=oneline --abbrev-commit --decorate
-        l0g = git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-        a = "!git status --short | peco | awk '{print $2}' | xargs git add"
-        d = diff
-        f = fetch
-        r = rebase
-        ri = rebase -i
-        co = checkout
-        ci = commit
-        ca = commit -a
-        ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
-        pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
-        st = status -sb
-        br = branch
-        ba = branch -a
-        u = commit --amend --no-edit
-        ua = !git add --all && git commit --amend --no-edit
-        hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
-        llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
-        # James Brown version control!
-        up = push
-        down = pull
-        # List contributors.
-        lc = shortlog --email --numbered --summary
-        # List remote branches.
-        lrb = "!f() { \
-        remote=\"${1:-origin}\"; \
-        git ls-remote --heads \"$remote\"; \
-        }; f"
-        # Search commits by source code.
-        sc = "!f() { \
-        git log --date=short --decorate --pretty=custom -S\"$1\"; \
-        }; f"
-        # Seach commits by commit message.
-        sm = "!f() { \
-        git log --date=short --decorate --pretty=custom --grep=\"$1\"; \
-        }; f"
+[diff]
+    context = 3
+    renames = copies
+    interHunkContext = 10
 
 [init]
-        defaultBranch = main
+    defaultBranch = main
 
-[pull]
-        default = simple
+[log]
+    abbrevCommit = true
+    graphColors = blue,yellow,cyan,magenta,green,red
+
+[status]
+    branch = true
+    short = true
+    showStash = true
+    showUntrackedFiles = all
 
 [push]
-        default = simple
-        followTags = true
+    autoSetupRemote = true
+    default = current
+    followTags = true
+    gpgSign = false
+
+[pull]
+    rebase = true
+
+[submodule]
+    fetchJobs = 16
+
+[rebase]
+    autoStash = true
+
+[github]
+    user = johnie
+
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
+[alias]
+    git = !exec git
+    lg = log --pretty=oneline --abbrev-commit --decorate
+    l0g = git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+    a = "!git status --short | peco | awk '{print $2}' | xargs git add"
+    d = diff
+    f = fetch
+    r = rebase
+    ri = rebase -i
+    co = checkout
+    ci = commit
+    ca = commit -a
+    ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
+    pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
+    st = status -sb
+    br = branch
+    ba = branch -a
+    u = commit --amend --no-edit
+    ua = !git add --all && git commit --amend --no-edit
+    hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
+    llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
+    up = push
+    down = pull
+    lc = shortlog --email --numbered --summary
+    lrb = "!f() { \
+        remote=\"${1:-origin}\"; \
+        git ls-remote --heads \"$remote\"; \
+    }; f"
+    sc = "!f() { \
+        git log --date=short --decorate --pretty=custom -S\"$1\"; \
+    }; f"
+    sm = "!f() { \
+        git log --date=short --decorate --pretty=custom --grep=\"$1\"; \
+    }; f"
 
 [filter "lfs"]
-        clean = git-lfs clean -- %f
-        smudge = git-lfs smudge -- %f
-        required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    required = true
 
 [interactive]
     diffFilter = delta --color-only --features=interactive
@@ -103,4 +136,13 @@
     hunk-header-style = file line-number syntax
 
 [grep]
-	lineNumber = true
+    lineNumber = true
+
+[url "git@github.com:"]
+    insteadOf = "gh:"
+
+[url "git@github.com:johnie/"]
+    insteadOf = "jh:"
+
+[url "ssh://schibsted@schibsted.ghe.com:omni/"]
+    insteadOf = "omni:"
