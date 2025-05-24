@@ -80,7 +80,6 @@
 [alias]
     git = !exec git
     lg = log --pretty=oneline --abbrev-commit --decorate
-    l0g = git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
     a = "!git status --short | peco | awk '{print $2}' | xargs git add"
     d = diff
     f = fetch
@@ -89,28 +88,12 @@
     co = checkout
     ci = commit
     ca = commit -a
-    ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
-    pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
     st = status -sb
     br = branch
     ba = branch -a
     u = commit --amend --no-edit
-    ua = !git add --all && git commit --amend --no-edit
-    hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
-    llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
     up = push
     down = pull
-    lc = shortlog --email --numbered --summary
-    lrb = "!f() { \
-        remote=\"${1:-origin}\"; \
-        git ls-remote --heads \"$remote\"; \
-    }; f"
-    sc = "!f() { \
-        git log --date=short --decorate --pretty=custom -S\"$1\"; \
-    }; f"
-    sm = "!f() { \
-        git log --date=short --decorate --pretty=custom --grep=\"$1\"; \
-    }; f"
 
 [filter "lfs"]
     clean = git-lfs clean -- %f
