@@ -34,8 +34,8 @@ cp_p () {
 }
 
 # prune a set of empty directories
-function prunedir () { 
-   find $* -type d -empty -print0 | xargs -0r rmdir -p ; 
+function prunedir () {
+   find $* -type d -empty -print0 | xargs -0r rmdir -p ;
 }
 
 # take this repo and copy it to somewhere else minus the .git stuff.
@@ -57,4 +57,15 @@ function ghu(){
 # Undo a `git push`
 function undopush() {
   git push -f origin HEAD^:$1
+}
+
+gcm() {
+  git checkout main 2>/dev/null || git checkout master 2>/dev/null || {
+    echo "Neither 'main' nor 'master' branch exists in this repository."
+    return 1
+  }
+}
+
+clone() {
+  git clone "$1" && cd "$(basename "$1" .git)"
 }
