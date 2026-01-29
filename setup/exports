@@ -1,5 +1,5 @@
-export PATH=$HOME/bin:/usr/local/bin:/snap/bin:/opt/bin:$PATH
-export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:/snap/bin:/opt/bin:$PATH
+export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin
 export PATH=/usr/local/sbin:$PATH
 
 export LANG=en_US.UTF-8
@@ -7,8 +7,14 @@ export LANG=en_US.UTF-8
 export GOPATH="$HOME/dev/go"
 export PATH="$GOPATH/bin:$PATH"
 
+# NVM - OS-specific paths
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+    [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+else
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
 
 export PATH=~/.npm-global/bin:$PATH
