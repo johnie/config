@@ -1,18 +1,20 @@
-# Enable aliases to be sudo’ed
+# Enable aliases to be sudo'ed
 alias sudo='sudo '
 alias e="$EDITOR"
 
 # Reload the .zshrc
 alias reload='source $HOME/.zshrc && echo "Reloaded ~/.zshrc"'
 
-# programs
-alias preview="open -a '$PREVIEW'"
-alias safari="open -a safari"
-alias firefox="open -a firefox"
-alias chrome="open -a google\ chrome"
-alias cognito="open -a google\ chrome --args --incognito"
-alias spotify="osascript ~/code/SpotifyControl/SpotifyControl.scpt"
-alias imessage="open -a Messages"
+# macOS-only application aliases
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias preview="open -a '$PREVIEW'"
+    alias safari="open -a safari"
+    alias firefox="open -a firefox"
+    alias chrome="open -a google\ chrome"
+    alias cognito="open -a google\ chrome --args --incognito"
+    alias spotify="osascript ~/code/SpotifyControl/SpotifyControl.scpt"
+    alias imessage="open -a Messages"
+fi
 
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
@@ -31,10 +33,23 @@ alias zx="cd ~/dev/experiments"
 alias zr="cd ~/dev/rust"
 alias zgj="cd ~/dev/go/src/github.com/johnie"
 alias cl="clear"
-alias pbc="pbcopy"
 alias reboot="sudo shutdown -r now"
-alias sov="osascript -e 'tell application \"System Events\" to sleep'"
-alias pubkey="more ~/.ssh/id_ed25519.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
+
+# Clipboard - OS-specific
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias pbc="pbcopy"
+    alias pbcn="tr -d '\n' | pbcopy"
+    alias pubkey="more ~/.ssh/id_ed25519.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
+else
+    alias pbc="xclip -selection clipboard"
+    alias pbcn="tr -d '\n' | xclip -selection clipboard"
+    alias pubkey="cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard && echo '=> Public key copied to clipboard.'"
+fi
+
+# macOS-only system controls
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias sov="osascript -e 'tell application \"System Events\" to sleep'"
+fi
 
 # Get week number
 alias week='date +%V'
@@ -42,11 +57,19 @@ alias week='date +%V'
 # be nice
 alias doh='sudo $(history -p !-1)'
 
-# handy things
-alias wifi="airport"
-alias wifion="networksetup -setairportpower en1 on"
-alias wifioff="networksetup -setairportpower en1 off"
-alias flushdns="sudo killall -HUP mDNSResponder"
+# handy things - macOS WiFi
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias wifi="airport"
+    alias wifion="networksetup -setairportpower en1 on"
+    alias wifioff="networksetup -setairportpower en1 off"
+fi
+
+# Flush DNS - OS-specific
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias flushdns="sudo killall -HUP mDNSResponder"
+else
+    alias flushdns="sudo systemd-resolve --flush-caches"
+fi
 
 if $(eza &>/dev/null)
 then
@@ -60,8 +83,14 @@ alias gr='[ ! -z `git rev-parse --show-cdup` ] && cd `git rev-parse --show-cdup 
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias localip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+
+# Local IP - OS-specific
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias localip="ipconfig getifaddr en1"
+else
+    alias localip="hostname -I | awk '{print \$1}'"
+fi
 
 # Enhanced WHOIS lookups
 alias whois="whois -h whois-servers.net"
@@ -108,63 +137,86 @@ alias dc='docker compose'
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
-# Trim new lines and copy to clipboard
-alias pbcn="tr -d '\n' | pbcopy"
-
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
 
 # Shortcuts
 alias v="nvim"
 
-# File size
-alias fs="stat -f \"%z bytes\""
+# File size - OS-specific
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias fs="stat -f \"%z bytes\""
+else
+    alias fs="stat -c \"%s bytes\""
+fi
 
-# Hide/show all desktop icons (useful when presenting)
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+# macOS-only Finder and desktop aliases
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Hide/show all desktop icons (useful when presenting)
+    alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+    alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
-# Show/Hide hidden files in Finder
-alias showfiles="defaults write com.apple.finder AppleShowAllFiles YES && killall Finder"
-alias hidefiles="defaults write com.apple.finder AppleShowAllFiles NO && killall Finder"
+    # Show/Hide hidden files in Finder
+    alias showfiles="defaults write com.apple.finder AppleShowAllFiles YES && killall Finder"
+    alias hidefiles="defaults write com.apple.finder AppleShowAllFiles NO && killall Finder"
 
-# PlistBuddy alias, because sometimes `defaults` just doesn’t cut it
-alias plistbuddy="/usr/libexec/PlistBuddy"
+    # PlistBuddy alias, because sometimes `defaults` just doesn't cut it
+    alias plistbuddy="/usr/libexec/PlistBuddy"
+fi
 
-# One of @janmoesen’s ProTip™s
+# One of @janmoesen's ProTip™s
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"="lwp-request -m '$method'"
 done
 
-# Stuff I never really use but cannot delete either because of http://xkcd.com/530/
-alias stfu="osascript -e 'set volume output muted true'"
-alias pumpitup="osascript -e 'set volume 10'"
+# macOS-only volume and system controls
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Stuff I never really use but cannot delete either because of http://xkcd.com/530/
+    alias stfu="osascript -e 'set volume output muted true'"
+    alias pumpitup="osascript -e 'set volume 10'"
+fi
 
-# MacOS log
-alias msg='tail -f /var/log/system.log'
+# System log - OS-specific
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias msg='tail -f /var/log/system.log'
+else
+    alias msg='journalctl -f'
+fi
 
-# Shorter commands for `Homebrew`.
-alias brewd="brew doctor"
-alias brewi="brew install"
-alias brewr="brew uninstall"
-alias brews="brew search"
-alias brewu="brew update --quiet \
+# macOS-only Homebrew aliases
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Shorter commands for `Homebrew`.
+    alias brewd="brew doctor"
+    alias brewi="brew install"
+    alias brewr="brew uninstall"
+    alias brews="brew search"
+    alias brewu="brew update --quiet \
+                    && brew upgrade \
+                    && brew cleanup"
+
+    # Empty the trash, the main HDD and on all mounted volumes,
+    # and clear Apple's system logs to improve shell startup speed.
+    alias empty-trash="sudo rm -frv /Volumes/*/.Trashes; \
+                       sudo rm -frv ~/.Trash; \
+                       sudo rm -frv /private/var/log/asl/*.asl; \
+                       sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
+fi
+
+# Open command - OS-specific
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias o="open"
+    alias oo="open ."
+else
+    alias o="xdg-open"
+    alias oo="xdg-open ."
+fi
+
+# Update command - OS-specific
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias update="sudo softwareupdate --install --all \
+                && brew update \
                 && brew upgrade \
                 && brew cleanup"
-
-# Empty the trash, the main HDD and on all mounted volumes,
-# and clear Apple’s system logs to improve shell startup speed.
-alias empty-trash="sudo rm -frv /Volumes/*/.Trashes; \
-                   sudo rm -frv ~/.Trash; \
-                   sudo rm -frv /private/var/log/asl/*.asl; \
-                   sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
-
-# Open from the terminal.
-alias o="open"
-alias oo="open ."
-
-# Update applications and CLTs.
-alias update="sudo softwareupdate --install --all \
-            && brew update \
-            && brew upgrade \
-            && brew cleanup"
+else
+    alias update="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
+fi
