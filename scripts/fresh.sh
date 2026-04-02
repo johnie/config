@@ -1,19 +1,23 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-echo "Setting up your Mac..."
+set -euo pipefail
 
-# Check for Homebrew and install if we don't have it
-if test ! $(which brew); then
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BREWFILE_PATH="${BREWFILE_PATH:-$ROOT_DIR/Brewfile}"
+
+echo "Setting up packages with Homebrew..."
+
+if ! command -v brew >/dev/null 2>&1; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-if test $(which brew); then
-    # Run bryggeri
-    /bin/bash -c "$(curl -fsSL https://brg.re/install)"
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-if test $(which bryggeri); then
-    # Install brew packages
-    bryggeri install
-    bryggeri install --cask
-fi
+brew bundle --file "$BREWFILE_PATH"
+brew bundle check --file "$BREWFILE_PATH"
+
+echo "Homebrew bundle complete."

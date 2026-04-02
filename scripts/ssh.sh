@@ -1,20 +1,36 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Input your email address (the one used for your GitHub account): "
-read = email
+set -euo pipefail
+
+printf 'Input your email address (the one used for your GitHub account): '
+read -r email
 
 echo "Generating a new SSH key for GitHub..."
 
-# Generating a new SSH key
-ssh-keygen -t ed25519 -C $email -f ~/.ssh/id_ed25519
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
 
-# Adding your SSH key to the ssh-agent
+if [[ ! -f "$HOME/.ssh/id_ed25519" ]]; then
+  ssh-keygen -t ed25519 -C "$email" -f "$HOME/.ssh/id_ed25519"
+fi
+
 eval "$(ssh-agent -s)"
 
-touch ~/.ssh/config
-echo "Host *\n AddKeysToAgent yes\n UseKeychain yes\n IdentityFile ~/.ssh/id_ed25519" | tee ~/.ssh/config
+touch "$HOME/.ssh/config"
 
-ssh-add -K ~/.ssh/id_ed25519
+if ! grep -q 'IdentityFile ~/.ssh/id_ed25519' "$HOME/.ssh/config"; then
+  cat >> "$HOME/.ssh/config" <<'EOF'
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+EOF
+fi
 
-# Adding your SSH key to your GitHub account
+if ssh-add --apple-use-keychain "$HOME/.ssh/id_ed25519" >/dev/null 2>&1; then
+  :
+else
+  ssh-add "$HOME/.ssh/id_ed25519"
+fi
+
 echo "run 'pbcopy < ~/.ssh/id_ed25519.pub' and paste that into GitHub"
