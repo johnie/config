@@ -35,3 +35,9 @@ build/
 
 # Env files
 .env*
+
+# Local AI/editor settings
+**/.claude/settings.local.json
+
+# Project planning
+improvement-plans/

@@ -1,11 +1,20 @@
-echo "Type in your first and last name (no accent or special characters - e.g. 'ç'): "
-read full_name
+#!/usr/bin/env bash
 
-echo "Type in your email address (the one used for your GitHub account): "
-read email
+set -euo pipefail
 
-git config --global user.email "$email"
-git config --global user.name "$full_name"
-git config --global user.signingkey ~/.ssh/id_ed25519.pub
+target_file="$HOME/.gitconfig.local"
 
-echo "👌 Awesome, all set."
+printf 'Type in your first and last name: '
+read -r full_name
+
+printf 'Type in your email address: '
+read -r email
+
+cat > "$target_file" <<EOF
+[user]
+    name = $full_name
+    email = $email
+    signingkey = ~/.ssh/id_ed25519.pub
+EOF
+
+printf 'Wrote %s\n' "$target_file"
