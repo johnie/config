@@ -1,0 +1,13 @@
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ~='cd ~'
+
+alias zp='cd ~/dev/projects'
+alias zc='cd ~/dev/crip'
+alias zb='cd ~/dev/boss'
+alias zg='cd ~/dev/go'
+alias zx='cd ~/dev/experiments'
+alias zr='cd ~/dev/rust'
+alias zgj='cd ~/dev/go/src/github.com/johnie'
