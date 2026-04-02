@@ -29,7 +29,7 @@
 
 ## 📍 Overview
 
-This repository contains a collection of dotfiles and scripts for setting up a development environment quickly and efficiently. The included scripts automate the process of installing necessary applications and configuring your system to your preferences.
+This repository contains my tracked shell, editor, terminal, and app configuration, plus bootstrap scripts for linking those files into a fresh machine safely.
 
 ---
 
@@ -37,49 +37,24 @@ This repository contains a collection of dotfiles and scripts for setting up a d
 
 - Unix-like operating system (MacOS, Linux, etc.)
 - `git` installed on your machine
-- `curl` or `wget` for downloading files (if not included in the install script)
+- `curl` for downloading dependencies when needed
+- `bash` for the bootstrap scripts
 
 ---
 
 ## 📂 Repository Structure
 
 ```sh
-└── config/
-    ├── .config/
-    │   ├── karabiner/
-    │   │   ├── automatic_backups/
-    │   │   └── karabiner.json
-    │   ├── nvim/
-    │   │   ├── after/
-    │   │   ├── colors/
-    │   │   ├── init.vim
-    │   │   ├── macos.vim
-    │   │   ├── maps.vim
-    │   │   ├── plug.vim
-    │   │   └── windows.vim
-    │   ├── sheldon/
-    │   │   └── plugins.toml
-    │   └── starship.toml
-    ├── init/
-    │   ├── vscode_extensions.json
-    │   └── vscode_settings.json
-    ├── scripts/
-    │   ├── fresh.sh
-    │   ├── git_config.sh
-    │   ├── macos.sh
-    │   ├── ssh.sh
-    │   └── vscode.sh
-    └── setup/
-        ├── aliases
-        ├── colors
-        ├── editorconfig
-        ├── exports
-        ├── extra
-        ├── functions
-        ├── gitconfig
-        ├── gitignore
-        └── zshrc
-
+config/
+├── Brewfile               # Homebrew packages and casks
+├── bootstrap/
+│   └── vscode/            # VS Code bootstrap settings/extensions
+├── .config/               # tracked XDG config
+│   └── zsh/               # aliases/functions split into modules
+├── examples/              # local/private config templates
+├── scripts/               # link and setup helpers
+├── setup/                 # tracked dotfiles linked into $HOME
+└── install.sh             # entrypoint for bootstrap commands
 ```
 
 ---
@@ -100,12 +75,54 @@ git clone https://github.com/johnie/config
 cd config
 ```
 
-3. Run the Install Script
+3. Create symlinks for the tracked dotfiles:
 
 ```sh
-chmod +x install.sh
-./install.sh
+./install.sh link
 ```
+
+4. Run the setup doctor:
+
+```sh
+./install.sh doctor
+```
+
+The doctor checks:
+
+- Homebrew availability
+- `Brewfile` satisfaction
+- key commands used by the repo
+- managed symlink targets
+- expected local/private files such as `~/.gitconfig.local`
+
+5. Optional follow-up steps for a fresh machine:
+
+```sh
+./install.sh packages
+./install.sh macos
+./install.sh ssh
+./install.sh git
+./install.sh vscode
+```
+
+`./install.sh packages` runs `brew bundle` against the checked-in `Brewfile`.
+
+You can also run it directly:
+
+```sh
+brew bundle --file ./Brewfile
+```
+
+## Private And Local Files
+
+Tracked files are meant to be symlinked. Machine-local or secret-bearing files should stay outside the repo.
+
+- `examples/gitconfig.local.example` -> `~/.gitconfig.local`
+- `examples/functions.private.example` -> `~/.functions.private`
+- `examples/zshrc.local.example` -> `~/.zshrc.local`
+- `examples/npmrc.example` -> `~/.npmrc`
+
+The linker backs up any existing target into `~/.dotfiles-backups/<timestamp>/` before replacing it with a symlink.
 
 ---
 
