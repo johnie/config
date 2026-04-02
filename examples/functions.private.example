@@ -1,0 +1,6 @@
+# Source this from ~/.functions.private for machine-local commands and secrets.
+
+# Example:
+# workvpn() {
+#   open -a "AppGate SDP"
+# }

@@ -1,71 +1,7 @@
-# Create a new directory and enter it
-function mdn {
-  if [ ! -n "$1" ]; then
-    echo "Enter a directory name"
-  elif [ -d $1 ]; then
-    echo "\`$1' already exists"
-  else
-    mkdir $1 && cd $1
-  fi
-}
+function_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/functions"
 
-# Change working directory to the top-most Finder window location
-function cdf() { # short for `cdfinder`
-	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
-}
+for file in "$function_dir"/*.zsh(N); do
+  source "$file"
+done
 
-# Determine size of a file or total size of a directory
-function fs() {
-	if du -b /dev/null > /dev/null 2>&1; then
-		local arg=-sbh;
-	else
-		local arg=-sh;
-	fi
-	if [[ -n "$@" ]]; then
-		du $arg -- "$@";
-	else
-		du $arg .[^.]* ./*;
-	fi;
-}
-
-# Copy w/ progress
-cp_p () {
-  rsync -WavP --human-readable --progress $1 $2
-}
-
-# prune a set of empty directories
-function prunedir () {
-   find $* -type d -empty -print0 | xargs -0r rmdir -p ;
-}
-
-# take this repo and copy it to somewhere else minus the .git stuff.
-function gitexport(){
-	mkdir -p "$1"
-	git archive $1 | tar -x -C "$1"
-}
-
-# Open github profile or repo
-function ghd(){
-    open -a google\ chrome 'http://github.com/johnie/'${PWD##*/}
-}
-
-# Open github user or and repo
-function ghu(){
-    open -a google\ chrome 'http://github.com/'$1'/'$2
-}
-
-# Undo a `git push`
-function undopush() {
-  git push -f origin HEAD^:$1
-}
-
-gcm() {
-  git checkout main 2>/dev/null || git checkout master 2>/dev/null || {
-    echo "Neither 'main' nor 'master' branch exists in this repository."
-    return 1
-  }
-}
-
-clone() {
-  git clone "$1" && cd "$(basename "$1" .git)"
-}
+unset function_dir file
