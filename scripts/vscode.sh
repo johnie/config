@@ -1,14 +1,29 @@
-while read p; do
-  echo Installing $p
-  code --install-extension $p
-done < ../init/vscode_extensions.json
+#!/usr/bin/env bash
 
-$vscodeDirectory = "$HOME/Library/Application Support/Code/User"
+set -euo pipefail
 
-echo "Backup VSCode settings..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+VSCODE_DIRECTORY="$HOME/Library/Application Support/Code/User"
+SETTINGS_SOURCE="$ROOT_DIR/bootstrap/vscode/settings.json"
+KEYBINDINGS_SOURCE="$ROOT_DIR/bootstrap/vscode/keybindings.json"
+EXTENSIONS_SOURCE="$ROOT_DIR/bootstrap/vscode/extensions.txt"
 
-mv "$vscodeDirectory/settings.json" "$vscodeDirectory/settings.json.backup"
+while IFS= read -r extension; do
+  [[ -z "$extension" ]] && continue
+  echo "Installing $extension"
+  code --install-extension "$extension"
+done < "$EXTENSIONS_SOURCE"
 
-echo "Symlinking VSCode settings..."
+mkdir -p "$VSCODE_DIRECTORY"
 
-ln -sf "../init/vscode_settings.json" "$vscodeDirectory/settings.json"
+if [[ -e "$VSCODE_DIRECTORY/settings.json" && ! -L "$VSCODE_DIRECTORY/settings.json" ]]; then
+  mv "$VSCODE_DIRECTORY/settings.json" "$VSCODE_DIRECTORY/settings.json.backup.$(date +%Y%m%d-%H%M%S)"
+fi
+
+if [[ -e "$VSCODE_DIRECTORY/keybindings.json" && ! -L "$VSCODE_DIRECTORY/keybindings.json" ]]; then
+  mv "$VSCODE_DIRECTORY/keybindings.json" "$VSCODE_DIRECTORY/keybindings.json.backup.$(date +%Y%m%d-%H%M%S)"
+fi
+
+ln -sfn "$SETTINGS_SOURCE" "$VSCODE_DIRECTORY/settings.json"
+ln -sfn "$KEYBINDINGS_SOURCE" "$VSCODE_DIRECTORY/keybindings.json"
