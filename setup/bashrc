@@ -1,0 +1,5 @@
+if [[ -d "$HOME/.lmstudio/bin" ]]; then
+  export PATH="$PATH:$HOME/.lmstudio/bin"
+fi
+
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

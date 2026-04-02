@@ -1,9 +1,115 @@
-for file in ~/.{extra,exports,aliases,functions,colors}; do
+if [[ -n "$GHOSTTY_RESOURCES_DIR" ]]; then
+    source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+fi
+
+export NVM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nvm"
+[[ -d "$HOME/.nvm" && ! -d "$NVM_DIR" ]] && export NVM_DIR="$HOME/.nvm"
+
+_load_nvm() {
+    unset -f nvm node npm npx corepack pnpm yarn 2>/dev/null
+    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+}
+
+nvm() {
+    _load_nvm
+    nvm "$@"
+}
+
+node() {
+    _load_nvm
+    node "$@"
+}
+
+npm() {
+    _load_nvm
+    npm "$@"
+}
+
+npx() {
+    _load_nvm
+    npx "$@"
+}
+
+corepack() {
+    _load_nvm
+    corepack "$@"
+}
+
+pnpm() {
+    _load_nvm
+    pnpm "$@"
+}
+
+yarn() {
+    _load_nvm
+    yarn "$@"
+}
+
+_find_nvmrc() {
+    local dir="$PWD"
+
+    while [[ "$dir" != "/" ]]; do
+        if [[ -f "$dir/.nvmrc" ]]; then
+            printf '%s/.nvmrc\n' "$dir"
+            return 0
+        fi
+        dir="${dir:h}"
+    done
+
+    [[ -f "/.nvmrc" ]] && printf '/.nvmrc\n'
+}
+
+_nvm_auto_use() {
+    local nvmrc_path
+
+    nvmrc_path="$(_find_nvmrc)"
+    if [[ -n "$nvmrc_path" ]]; then
+        _load_nvm
+        nvm use --silent >/dev/null
+    fi
+}
+
+for file in \
+    ~/.extra \
+    ~/.exports \
+    ~/.exports.local \
+    ~/.functions \
+    ~/.functions.private \
+    ~/.aliases \
+    ~/.aliases.local \
+    ~/.colors; do
     [ -r "$file" ] && source "$file"
 done
 unset file
 
+if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(starship init zsh)"
-eval "$(sheldon source)"
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init zsh)"
+fi
+
+if command -v sheldon >/dev/null 2>&1; then
+    eval "$(sheldon source)"
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
+fi
+
+if [[ -d "$HOME/.lmstudio/bin" ]]; then
+    export PATH="$PATH:$HOME/.lmstudio/bin"
+fi
+
+if [[ -s "$HOME/.bun/_bun" ]]; then
+    source "$HOME/.bun/_bun"
+fi
+
+autoload -U add-zsh-hook
+add-zsh-hook chpwd _nvm_auto_use
+_nvm_auto_use
+
+[ -r "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
