@@ -1,0 +1,5 @@
+.DS_Store
+.config/configstore/
+.config/gh/hosts.yml
+.config/karabiner/automatic_backups/
+.config/nvim/plugged/
