@@ -1,5 +1,7 @@
 if has("nvim")
   let g:plug_home = stdpath('data') . '/plugged'
+else
+  let g:plug_home = expand('~/.vim/plugged')
 endif
 
 if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
@@ -9,12 +11,10 @@ if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autolo
 	autocmd VimEnter * PlugInstall
 endif
 
-call plug#begin()
+call plug#begin(g:plug_home)
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
-
-call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 Plug 'tpope/vim-surround'
 Plug 'preservim/nerdtree'
 Plug 'junegunn/goyo.vim'
@@ -24,4 +24,5 @@ Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 Plug 'miikanissi/modus-themes.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
